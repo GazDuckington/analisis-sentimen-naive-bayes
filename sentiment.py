@@ -94,16 +94,6 @@ def predict_nbc(text, logprior, loglikelihood):
             p += loglikelihood[word]
     return p
 
-# * predict_nbc per-kata
-def predict_perkata(text, logpri, loglik):
-    l = []
-    for w in text:
-        x = predict_nbc(w, logpri, loglik)
-        l.append({
-            w,
-            x
-            })
-    return l
 # *test nbc
 def test_nbc(test_x, test_y, logprior, loglikelihood):
     """
