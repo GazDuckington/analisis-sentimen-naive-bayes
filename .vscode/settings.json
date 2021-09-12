@@ -1,0 +1,7 @@
+{
+    "python.pythonPath": "/home/gaz/.local/share/virtualenvs/proyek-sk-w6ADQI2p/bin/python",
+    "jupyter.jupyterServerType": "local",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "jupyter.jupyterServerURI": "local"
+}
