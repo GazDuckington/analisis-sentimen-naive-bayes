@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/home/gaz/.local/share/virtualenvs/proyek-sk-w6ADQI2p/bin/python",
+    "python.pythonPath": "/home/gaz/.local/share/virtualenvs/analisis-sentimen-naive-bayes-RPxRJ-iK/bin/python",
     "jupyter.jupyterServerType": "local",
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,

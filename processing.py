@@ -18,6 +18,7 @@ def rem_url(txt):
   return U
   
 def rem_num(txt):
+    """Remove numbers"""
     s = re.sub(r"\d+", "", txt)
     return s
 
@@ -48,7 +49,9 @@ def stemm(txt):
     return K
 
 def freqs(txt):
-    """Determine unique word's frequencies"""
+    """Determine unique word's frequencies
+        Output: tuple
+    """
     F = nltk.FreqDist(txt)
     return F.most_common()
 
