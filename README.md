@@ -23,8 +23,8 @@ nltk.download('stopwords')
 ```
 # TENTANG PROYEK
 gunakan ```help(nama_fungsi)``` dalam python untuk informasi mengenai masing-masing fungsi
-## *preprocessing*
-- fungsi-fungsi normalisasi kalimat. daftar fungsi:
+## *preprocessing.py*
+fungsi-fungsi normalisasi kalimat. daftar fungsi:
 - rem_url(string)
 - rem_num(string)
 - tokenize(string)
@@ -33,7 +33,7 @@ gunakan ```help(nama_fungsi)``` dalam python untuk informasi mengenai masing-mas
 - stemm(string)
 - freqs(string)
 - normalisasi(string)
-## *sentiment*
+## *sentiment.py*
 fungsi-fungsi kalkulasi naive-bayes. daftar fungsi
 - kamus_freq(teks, label)
 - train_nbc(kamus_freq, train_x, train_y)
