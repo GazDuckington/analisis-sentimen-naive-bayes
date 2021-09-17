@@ -12,7 +12,7 @@ Instalasi dapat dilakukan dengan perintah berikut:
 ```bash
 pip install -r requirements.txt
 ```
-Jika terjadi kegagalan instalasi dengan menggunakan *requirements.txt*. Install secara manual:
+Jika terjadi kegagalan instalasi dengan menggunakan *requirements.txt*. Instal dependensi esensial, secara manual:
 ```bash
 pip install nltk sastrawi pandas numpy
 ```
