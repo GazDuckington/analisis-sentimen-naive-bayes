@@ -37,7 +37,10 @@ def train_nbc(freqs, train_x, train_y):
     """
     loglikelihood = {}
     logprior = 0
-    N_pos = N_neg = 0
+    freq_pos=0
+    freq_neg=0
+    N_pos = 0
+    N_neg = 0
 
     unique_words = set([pair[0] for pair in freqs.keys()])
     v = len(unique_words)
@@ -50,14 +53,14 @@ def train_nbc(freqs, train_x, train_y):
             N_neg += freqs[(pair)]    
 
         # jumlah document
-        D = train_y.shape[0]
+        D = len(train_y)
         # jumlah document positif
-        D_pos = sum(train_y)
+        D_pos = np.sum(train_y)
         # jumlah document negatif
-        D_neg = D - sum(train_y)
+        D_neg = D - D_pos
 
         # kemungkinan nilai sentimen suatu kata
-        logprior = np.log(D_pos) - np.log(D_neg)
+        logprior = math.log(D_pos) - math.log(D_neg)
         
         for word in unique_words:
 
@@ -69,7 +72,7 @@ def train_nbc(freqs, train_x, train_y):
             pw_neg = (freq_neg + 1) / (N_neg + v)
 
             # kemungkinan suatu kata dalam suatu dokumen yang bernilai positif/negatif
-            loglikelihood[word] = np.log(pw_pos / pw_neg)
+            loglikelihood[word] = math.log(pw_pos) - math.log(pw_neg)
 
         return logprior, loglikelihood
 
