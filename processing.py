@@ -50,5 +50,4 @@ def freqs(txt):
     """Determine unique word's frequencies
     Output: tuple
     """
-    F = nltk.FreqDist(txt)
-    return F.most_common()
+    return nltk.FreqDist(txt).most_common()
