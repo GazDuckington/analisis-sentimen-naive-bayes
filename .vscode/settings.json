@@ -3,5 +3,6 @@
     "jupyter.jupyterServerType": "local",
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
-    "jupyter.jupyterServerURI": "local"
+    "jupyter.jupyterServerURI": "local",
+    "python.formatting.provider": "black"
 }
