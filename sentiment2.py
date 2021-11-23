@@ -1,6 +1,5 @@
 import numpy as np
 from processing import normalisasi
-import math
 
 # *kamus frekuensi kata
 def kamus_freq(teks, label):
@@ -23,7 +22,7 @@ def kamus_freq(teks, label):
     return result
 
 # *NBC training
-def train_nbc(freqs, train_x, train_y):
+def train_nbc(freqs, train_y):
     """melatih naive-bayes classifier
     Args:
         freqs ([dict]): [kamus frekuensi kata data training]
@@ -37,7 +36,7 @@ def train_nbc(freqs, train_x, train_y):
     logprior = 0
     N_pos = N_neg = 0
 
-    unique_words = set([pair[0] for pair in freqs.keys()])
+    unique_words = {pair[0] for pair in freqs.keys()}
     v = len(unique_words)
 
     # menghitung jumlah kata negatif (N_neg) dan positif (N_pos)
@@ -56,7 +55,7 @@ def train_nbc(freqs, train_x, train_y):
 
         # kemungkinan nilai sentimen suatu kata
         logprior = np.log(D_pos) - np.log(D_neg)
-        
+
         for word in unique_words:
 
             # frekuensi positif dan negatif suatu kata
