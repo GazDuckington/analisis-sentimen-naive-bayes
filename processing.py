@@ -1,11 +1,9 @@
-import nltk, string, re
-import pandas as pd
-import numpy as np
+import nltk, re
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 
-# TODO: save stopwords to a document to minimize dependency
+#TODO: save stopwords to a document to minimize dependency
 stopwords_en = stopwords.words("english")
 stopwords_id = stopwords.words("indonesian")
 swtw = [
@@ -18,7 +16,6 @@ swtw = [
     "%",
 ]
 stopwords_id = set(stopwords_id + stopwords_en + swtw)
-stopwords_id
 
 
 def rem_stop(txt):
