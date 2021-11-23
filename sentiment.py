@@ -1,11 +1,9 @@
 import numpy as np
 from processing import normalisasi
-import math
 
 # *kamus frekuensi kata
 def kamus_freq(teks, label):
     """kamus frekwensi kata dalam dokumen
-
     input:
         teks: list string
         label: list integer
@@ -24,9 +22,8 @@ def kamus_freq(teks, label):
     return result
 
 # *NBC training
-def train_nbc(freqs, train_x, train_y):
+def train_nbc(freqs, train_y):
     """melatih naive-bayes classifier
-
     Args:
         freqs ([dict]): [kamus frekuensi kata data training]
         train_y ([array]): [label sentimen data training]
@@ -37,12 +34,9 @@ def train_nbc(freqs, train_x, train_y):
     """
     loglikelihood = {}
     logprior = 0
-    freq_pos=0
-    freq_neg=0
-    N_pos = 0
-    N_neg = 0
+    N_pos = N_neg = 0
 
-    unique_words = set([pair[0] for pair in freqs.keys()])
+    unique_words = {pair[0] for pair in freqs.keys()}
     v = len(unique_words)
 
     # menghitung jumlah kata negatif (N_neg) dan positif (N_pos)
@@ -53,15 +47,15 @@ def train_nbc(freqs, train_x, train_y):
             N_neg += freqs[(pair)]    
 
         # jumlah document
-        D = len(train_y)
+        D = train_y.shape[0]
         # jumlah document positif
-        D_pos = np.sum(train_y)
+        D_pos = sum(train_y)
         # jumlah document negatif
-        D_neg = D - D_pos
+        D_neg = D - sum(train_y)
 
         # kemungkinan nilai sentimen suatu kata
-        logprior = math.log(D_pos) - math.log(D_neg)
-        
+        logprior = np.log(D_pos) - np.log(D_neg)
+
         for word in unique_words:
 
             # frekuensi positif dan negatif suatu kata
@@ -72,14 +66,13 @@ def train_nbc(freqs, train_x, train_y):
             pw_neg = (freq_neg + 1) / (N_neg + v)
 
             # kemungkinan suatu kata dalam suatu dokumen yang bernilai positif/negatif
-            loglikelihood[word] = math.log(pw_pos) - math.log(pw_neg)
+            loglikelihood[word] = np.log(pw_pos / pw_neg)
 
         return logprior, loglikelihood
 
 # *prediktor
 def predict_nbc(text, logprior, loglikelihood):
     """prediktor naive-bayes
-
     Args:
         text ([string]): [kalimat yang ingin diketahui sentimennya]
         logprior ([integer]): [probabilitas prior]
@@ -99,14 +92,14 @@ def predict_nbc(text, logprior, loglikelihood):
 
 # *test nbc
 def test_nbc(test_x, test_y, logprior, loglikelihood):
-    """
+    """menguji naivve-bayes classifier
     Input:
-        test_x: A list of tweets
-        test_y: the corresponding labels for the list of tweets
-        logprior: the logprior
-        loglikelihood: a dictionary with the loglikelihoods for each word
+        test_x: list kata
+        test_y: label dari setiap kata
+        logprior: logprior
+        loglikelihood: suatu dictionary yang berisikan loglikelihoods untuk setiap kata
     Output:
-        accuracy: (# of tweets classified correctly)/(total # of tweets)
+        accuracy: (klasifikasi benar)/(populasi)
     """
     accuracy = 0  # return this properly
     y_hats = []
