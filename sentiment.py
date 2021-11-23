@@ -105,13 +105,7 @@ def test_nbc(test_x, test_y, logprior, loglikelihood):
     y_hats = []
     for t in test_x:
         # if the prediction is > 0
-        if predict_nbc(t, logprior, loglikelihood) > 0:
-            # the predicted class is 1
-            y_hat_i = 1
-        else:
-            # otherwise the predicted class is 0
-            y_hat_i = 0
-
+        y_hat_i = 1 if predict_nbc(t, logprior, loglikelihood) > 0 else 0
         # append the predicted class to the list y_hats
         y_hats.append(y_hat_i)
 
