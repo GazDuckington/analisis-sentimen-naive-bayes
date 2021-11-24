@@ -14524,8 +14524,8 @@ a.anchor-link {
 <span class="n">nltk</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;NLTK_DATA&quot;</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">processing</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">sentiment2</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">processing</span> <span class="kn">import</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">normalisasi</span>
+<span class="kn">from</span> <span class="nn">sentiment</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 
      </div>
@@ -14614,7 +14614,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">logprior</span><span class="p">,</span> <span class="n">loglikelihood</span> <span class="o">=</span> <span class="n">train_nbc</span><span class="p">(</span><span class="n">kamus_frek</span><span class="p">,</span> <span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">kamus_frek</span>
 </pre></div>
 
      </div>
@@ -14628,10 +14628,8 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># file = open(&quot;/home/gaz/dev/flask-sk/database/prior.txt&quot;, &quot;w&quot;)</span>
-<span class="c1"># str = repr(logprior)</span>
-<span class="c1"># file.write(str)</span>
-<span class="c1"># file.close()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">kamus_frek</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">kamus_frek</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 </pre></div>
 
      </div>
@@ -14639,14 +14637,38 @@ a.anchor-link {
 </div>
 </div>
 
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="logprior">logprior<a class="anchor-link" href="#logprior">&#182;</a></h2><p>$D$ = jumlah dokumen <br>
+$D_{pos}$ = jumlah dokumen positif <br>
+$D_{neg}$ = jumlah dokumen negatif <br></p>
+<h3 id="probabilitas-dokumen-positif">probabilitas dokumen positif<a class="anchor-link" href="#probabilitas-dokumen-positif">&#182;</a></h3><p>$P(D_{pos}) = \frac{D_{pos}}{D}$</p>
+<h3 id="probabilitas-dokumen-negatif">probabilitas dokumen negatif<a class="anchor-link" href="#probabilitas-dokumen-negatif">&#182;</a></h3><p>$P(D_{neg}) = \frac{D_{neg}}{D}$</p>
+<h3 id="probabilitas-prior">probabilitas prior<a class="anchor-link" href="#probabilitas-prior">&#182;</a></h3><p>${logprior} = log \left( \frac{P(D_{pos})}{P(D_{neg})} \right) = log \left( \frac{D_{pos}}{D_{neg}} \right)$
+<br> disederhanakan, menjadi: <br>
+$logprior = P(D_{pos}) - P(D_{neg})$</p>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="loglikelihood">loglikelihood<a class="anchor-link" href="#loglikelihood">&#182;</a></h2><p>$W$ = probabilitas positif/negatif kata <br>
+$freq$ = frekuensi kata unik yang bernilai positif/negatif <br>
+$N$ =  jumlah total kata positif/negatif <br>
+$V$ = jumlah total kata unik (panjang dokumen frekuensi) <br></p>
+<h3 id="probabilitas-kata-positif">probabilitas kata positif<a class="anchor-link" href="#probabilitas-kata-positif">&#182;</a></h3><p>$P(W_{pos}) = \frac{freq_{pos} + 1}{N_{pos} + V}$</p>
+<h3 id="probabilitas-kata-negatif">probabilitas kata negatif<a class="anchor-link" href="#probabilitas-kata-negatif">&#182;</a></h3><p>$P(W_{neg}) = \frac{freq_{neg} + 1}{N_{neg} + V}$</p>
+<h3 id="likelihood-kata">likelihood kata<a class="anchor-link" href="#likelihood-kata">&#182;</a></h3><p>$\text{loglikelihood} = \log \left(\frac{P(W_{pos})}{P(W_{neg})} \right)$</p>
+
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># like = pd.DataFrame(list(loglikelihood.items()), columns = [&#39;kata&#39;, &#39;likelihood&#39;])</span>
-<span class="c1"># like.to_csv(&#39;/home/gaz/dev/flask-sk/database/loglikelihood.csv&#39;)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">logprior</span><span class="p">,</span> <span class="n">loglikelihood</span> <span class="o">=</span> <span class="n">train_nbc</span><span class="p">(</span><span class="n">kamus_frek</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14663,44 +14685,6 @@ a.anchor-link {
 </ul>
 
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">hasil_uji</span> <span class="o">=</span> <span class="n">test_nbc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">logprior</span><span class="p">,</span> <span class="n">loglikelihood</span><span class="p">)</span>
-<span class="n">hasil_uji</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>0.9749759384023099</pre>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
@@ -14773,7 +14757,7 @@ a.anchor-link {
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>0.9484615384615385</pre>
+<pre>0.9461538461538461</pre>
 </div>
 
 </div>
@@ -14786,6 +14770,30 @@ a.anchor-link {
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h2 id="CONFUSION-MATRIX"><em>CONFUSION MATRIX</em><a class="anchor-link" href="#CONFUSION-MATRIX">&#182;</a></h2>
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="metrik-metrik">metrik-metrik<a class="anchor-link" href="#metrik-metrik">&#182;</a></h2><ul>
+<li>TP = True Positive</li>
+<li>TN = True Negative</li>
+<li>FP = False Positive</li>
+<li>FN = False Negative</li>
+<li>Populasi = TP+TN+FP+FN
+### akurasi
+jumlah prediksi yang benar <br>
+$\frac{TP+TN}{Populasi}$
+### miss
+jumlah prediksi yang salah <br>
+$\frac{FP+FN}{Populasi}$
+### presisi
+persentase positif yang diprediksi secara akurat <br>
+$\frac{TP}{TP+FP}$
+### sensitifitas
+nilai positif sesungguhnya <br>
+$\frac{TP}{TP+FN}$</li>
+</ul>
+
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
@@ -14812,7 +14820,7 @@ a.anchor-link {
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Do more testing with thresholds values from 0, 0.5, 0.8, 0.9, 1</span>
 <span class="c1"># * to note;</span>
 <span class="c1"># treshold = -0.03272669350255697</span>
-<span class="c1"># * default treshold is 0, why?</span>
+<span class="c1"># * default treshold is 0</span>
 <span class="k">def</span> <span class="nf">toLabel</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
        <span class="k">return</span> <span class="mi">1</span>
@@ -14828,145 +14836,26 @@ a.anchor-link {
 </div>
 </div>
 
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pdc</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tr</span> <span class="o">=</span> <span class="n">logprior</span>
+<span class="k">def</span> <span class="nf">toLabel</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+   <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">tr</span><span class="p">:</span>
+       <span class="k">return</span> <span class="mi">1</span>
+   <span class="k">elif</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">tr</span><span class="p">:</span>
+       <span class="k">return</span> <span class="mi">0</span>
+   <span class="k">else</span><span class="p">:</span>
+       <span class="k">return</span> <span class="s2">&quot;n&quot;</span>
+<span class="n">pdc</span><span class="p">[</span><span class="s1">&#39;prediksi_tr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pdc</span><span class="p">[</span><span class="s1">&#39;label_prediksi&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">toLabel</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 </pre></div>
 
      </div>
 </div>
 </div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
-
-
-
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>text</th>
-      <th>label</th>
-      <th>label_prediksi</th>
-      <th>prediksi</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>&lt;USERNAME&gt; TOLOL!! Gak ada hubungan nya kegug...</td>
-      <td>0</td>
-      <td>-28.469450</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Geblek lo tata...cowo bgt dibela2in balikan......</td>
-      <td>0</td>
-      <td>-6.972478</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>Kmrn termewek2 skr lengket lg duhhh kok labil ...</td>
-      <td>0</td>
-      <td>-10.987958</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>Intinya kalau kesel dengan ATT nya, gausah ke ...</td>
-      <td>0</td>
-      <td>-27.500376</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>hadewwwww permpuan itu lg!!!!sakit jiwa,knp ha...</td>
-      <td>0</td>
-      <td>-11.574943</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>1295</th>
-      <td>Fargo juga adaptasi dari film yang cukup berha...</td>
-      <td>1</td>
-      <td>-0.014899</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>1296</th>
-      <td>637.000 waw ini sangat keren flm horor dng jum...</td>
-      <td>1</td>
-      <td>3.765355</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>1297</th>
-      <td>@filmziarah film yang tenang dan menghanyutkan...</td>
-      <td>1</td>
-      <td>-0.278355</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>1298</th>
-      <td>Film yg amat menarik. Kisah cinta &amp; kesetiaan ...</td>
-      <td>1</td>
-      <td>3.855516</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>1299</th>
-      <td>Nntn @filmziarah , film bagus, ada kali 5 meni...</td>
-      <td>1</td>
-      <td>-4.788818</td>
-      <td>0</td>
-    </tr>
-  </tbody>
-</table>
-<p>1300 rows × 4 columns</p>
-</div>
-</div>
-
-</div>
-
-</div>
-
 </div>
 
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
@@ -15032,8 +14921,8 @@ a.anchor-link {
     </tr>
     <tr>
       <th>1</th>
-      <td>81</td>
-      <td>558</td>
+      <td>84</td>
+      <td>555</td>
     </tr>
   </tbody>
 </table>
@@ -15046,27 +14935,151 @@ a.anchor-link {
 
 </div>
 
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># tp = 558</span>
-<span class="c1"># tn = 647</span>
-<span class="c1"># fp = 14</span>
-<span class="c1"># fn = 81</span>
-<span class="c1"># pop = tp+tn+fp+fn</span>
-<span class="c1"># acc = (tp+tn)/pop</span>
-<span class="c1"># mis = (fp+fn)/pop</span>
-<span class="c1"># pre = tp/(tp+fp)</span>
-<span class="c1"># sen = tp/(tp+fn)</span>
-<span class="c1"># print(f&quot;akurasi: {acc}\nmis-klasifikasi: {mis}\npresisi: {pre}\nsensitivitas: {sen}&quot;)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;akurasi:</span><span class="si">{</span><span class="p">(</span><span class="mi">647</span><span class="o">+</span><span class="mi">555</span><span class="p">)</span><span class="o">/</span><span class="mi">1300</span><span class="si">}</span><span class="s2">, miss:</span><span class="si">{</span><span class="p">(</span><span class="mi">14</span><span class="o">+</span><span class="mi">84</span><span class="p">)</span><span class="o">/</span><span class="mi">1300</span><span class="si">}</span><span class="s2">, presisi: </span><span class="si">{</span><span class="mi">555</span><span class="o">/</span><span class="p">(</span><span class="mi">555</span><span class="o">+</span><span class="mi">14</span><span class="p">)</span><span class="si">}</span><span class="s2">, sensi: </span><span class="si">{</span><span class="mi">555</span><span class="o">/</span><span class="p">(</span><span class="mi">555</span><span class="o">+</span><span class="mi">84</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 
      </div>
 </div>
 </div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>akurasi:0.9246153846153846, miss:0.07538461538461538, presisi: 0.9753954305799648, sensi: 0.8685446009389671
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">conf2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">pdc</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">],</span> <span class="n">pdc</span><span class="p">[</span><span class="s1">&#39;prediksi_tr&#39;</span><span class="p">],</span> <span class="n">rownames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Actual&#39;</span><span class="p">],</span> <span class="n">colnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Predicted&#39;</span><span class="p">])</span>
+<span class="n">conf2</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+
+
+
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Predicted</th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+    <tr>
+      <th>Actual</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>647</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>83</td>
+      <td>556</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;akurasi:</span><span class="si">{</span><span class="p">(</span><span class="mi">647</span><span class="o">+</span><span class="mi">556</span><span class="p">)</span><span class="o">/</span><span class="mi">1300</span><span class="si">}</span><span class="s2">, miss:</span><span class="si">{</span><span class="p">(</span><span class="mi">14</span><span class="o">+</span><span class="mi">83</span><span class="p">)</span><span class="o">/</span><span class="mi">1300</span><span class="si">}</span><span class="s2">, presisi: </span><span class="si">{</span><span class="mi">556</span><span class="o">/</span><span class="p">(</span><span class="mi">556</span><span class="o">+</span><span class="mi">14</span><span class="p">)</span><span class="si">}</span><span class="s2">, sensi: </span><span class="si">{</span><span class="mi">556</span><span class="o">/</span><span class="p">(</span><span class="mi">556</span><span class="o">+</span><span class="mi">83</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>akurasi:0.9253846153846154, miss:0.07461538461538461, presisi: 0.9754385964912281, sensi: 0.8701095461658842
+</pre>
+</div>
+</div>
+
+</div>
+
 </div>
 
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
@@ -15101,7 +15114,46 @@ a.anchor-link {
 
 
 <div class="jp-RenderedImage jp-OutputArea-output ">
-<img src="data:image/png;base64,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"
+<img src="data:image/png;base64,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"
+>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sn</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">conf2</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+<div class="jp-RenderedImage jp-OutputArea-output ">
+<img src="data:image/png;base64,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"
 >
 </div>
 
@@ -15124,6 +15176,22 @@ a.anchor-link {
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">berita</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;berita.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
 <span class="n">berita</span> <span class="o">=</span> <span class="n">berita</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">beritanormal</span> <span class="o">=</span> <span class="n">normalisasi</span><span class="p">(</span><span class="n">berita</span><span class="p">)</span>
+<span class="n">frekberita</span> <span class="o">=</span> <span class="n">freqs</span><span class="p">(</span><span class="n">beritanormal</span><span class="p">)</span>
+<span class="c1"># frekberita</span>
 </pre></div>
 
      </div>
@@ -15164,7 +15232,7 @@ a.anchor-link {
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>-33.3003778808566</pre>
+<pre>-33.43289827912097</pre>
 </div>
 
 </div>
@@ -15265,151 +15333,151 @@ a.anchor-link {
       <th>0</th>
       <td>BEIJING, KOMPAS.com - China pada Selasa (10/8/...</td>
       <td>[beijing, kompas, china, selasa, tari, utus, l...</td>
-      <td>-2.345609</td>
+      <td>-2.345557</td>
     </tr>
     <tr>
       <th>1</th>
       <td>Taiwan pada Juli mengatakan akan mendirikan ka...</td>
       <td>[taiwan, juli, kantor, wakil, vilnius, kota, l...</td>
-      <td>-2.631575</td>
+      <td>-2.631531</td>
     </tr>
     <tr>
       <th>2</th>
       <td>China menganggap Taiwan bukanlah negara yang b...</td>
       <td>[china, anggap, taiwan, negara, daulat, wilayah]</td>
-      <td>-2.521066</td>
+      <td>-2.521048</td>
     </tr>
     <tr>
       <th>3</th>
       <td>Kementerian Luar Negeri China marah dan pada S...</td>
       <td>[menteri, negeri, china, marah, selasa, perint...</td>
-      <td>1.176804</td>
+      <td>1.176839</td>
     </tr>
     <tr>
       <th>4</th>
       <td>Keputusan Lithuania mengizinkan Taiwan mendiri...</td>
       <td>[putus, lithuania, izin, taiwan, kantor, wakil...</td>
-      <td>-2.183572</td>
+      <td>-2.183537</td>
     </tr>
     <tr>
       <th>5</th>
       <td>Selain itu, Kementerian Luar Negeri China meni...</td>
       <td>[menteri, negeri, china, nilai, lithuania, ber...</td>
-      <td>-3.240881</td>
+      <td>-3.240828</td>
     </tr>
     <tr>
       <th>6</th>
       <td>China yang mengklaim Taiwan sebagai bagiannya ...</td>
       <td>[china, klaim, taiwan, janji, rebut, keras]</td>
-      <td>-1.711852</td>
+      <td>-1.711825</td>
     </tr>
     <tr>
       <th>7</th>
       <td>China mencoba membuat Taiwan tetap terisolasi ...</td>
       <td>[china, coba, taiwan, isolasi, panggung, dunia...</td>
-      <td>-1.746056</td>
+      <td>-1.746012</td>
     </tr>
     <tr>
       <th>8</th>
       <td>Kementerian Luar Negeri China pada Selasa (10/...</td>
       <td>[menteri, negeri, china, selasa, desak, lithua...</td>
-      <td>0.664262</td>
+      <td>0.664306</td>
     </tr>
     <tr>
       <th>9</th>
       <td>Kementerian Luar Negeri Lithuania menanggapi d...</td>
       <td>[menteri, negeri, lithuania, tanggap, kecewa, ...</td>
-      <td>-1.541953</td>
+      <td>-1.541926</td>
     </tr>
     <tr>
       <th>10</th>
       <td>"Sambil menghormati prinsip satu China, (Lithu...</td>
       <td>[hormat, prinsip, china, lithuania, tekad, kem...</td>
-      <td>0.766190</td>
+      <td>0.766251</td>
     </tr>
     <tr>
       <th>11</th>
       <td>Uni Eropa mengunngkapkan "kekecewaan" atas lan...</td>
       <td>[uni, eropa, mengunngkapkan, kecewa, langkah, ...</td>
-      <td>-1.136488</td>
+      <td>-1.136461</td>
     </tr>
     <tr>
       <th>12</th>
       <td>"Kami tidak menganggap pembukaan kantor perwak...</td>
       <td>[anggap, buka, kantor, wakil, taiwan, lawan, d...</td>
-      <td>-3.205330</td>
+      <td>-3.205277</td>
     </tr>
     <tr>
       <th>13</th>
       <td>"Ini adalah pertama kalinya China menarik seor...</td>
       <td>[kali, china, tarik, orang, duta, negara, angg...</td>
-      <td>-2.392743</td>
+      <td>-2.392681</td>
     </tr>
     <tr>
       <th>14</th>
       <td>Di Taipei, kementerian luar negeri menyebut Li...</td>
       <td>[taipei, menteri, negeri, lithuania, mitra, pi...</td>
-      <td>-0.323841</td>
+      <td>-0.323824</td>
     </tr>
     <tr>
       <th>15</th>
       <td>"Berdasarkan nilai-nilai universal demokrasi, ...</td>
       <td>[dasar, nilai, universal, demokrasi, bebas, ha...</td>
-      <td>-3.097878</td>
+      <td>-3.097790</td>
     </tr>
     <tr>
       <th>16</th>
       <td>Pembukaan kantor Vilnius adalah tanda terbaru ...</td>
       <td>[buka, kantor, vilnius, tanda, negara, baltik,...</td>
-      <td>-0.784962</td>
+      <td>-0.784909</td>
     </tr>
     <tr>
       <th>17</th>
       <td>Pada Mei 2021, Lithuania mengumumkan akan kelu...</td>
       <td>[mei, lithuania, forum, kerjasama, china, nega...</td>
-      <td>0.651839</td>
+      <td>0.651883</td>
     </tr>
     <tr>
       <th>18</th>
       <td>Sejak saat itu, Lithuania berjanji untuk menyu...</td>
       <td>[lithuania, janji, sumbang, dosis, vaksin, vir...</td>
-      <td>1.350135</td>
+      <td>1.350153</td>
     </tr>
     <tr>
       <th>19</th>
       <td>Pada 2019, Ceko membatalkan perjanjian kota ke...</td>
       <td>[ceko, batal, janji, kota, kembar, beijing, me...</td>
-      <td>-1.424170</td>
+      <td>-1.424143</td>
     </tr>
     <tr>
       <th>20</th>
       <td>Kemudian pada 2020, pemimpin senat Ceko Milos ...</td>
       <td>[pimpin, senat, ceko, milos, vystrcil, laku, k...</td>
-      <td>-2.069456</td>
+      <td>-2.202944</td>
     </tr>
     <tr>
       <th>21</th>
       <td>China memutuskan kontak resmi dengan Taiwan da...</td>
       <td>[china, putus, kontak, resmi, taiwan, tingkat,...</td>
-      <td>-0.154637</td>
+      <td>-0.154593</td>
     </tr>
     <tr>
       <th>22</th>
       <td>Lalu, Tsai memenangkan kembali pemilihan denga...</td>
       <td>[tsai, menang, pilih, telak]</td>
-      <td>1.889132</td>
+      <td>1.889149</td>
     </tr>
     <tr>
       <th>23</th>
       <td>Ia menolak sikap China bahwa Taian adalah bagi...</td>
       <td>[tolak, sikap, china, taian, china, usaha, tah...</td>
-      <td>-3.807148</td>
+      <td>-3.807104</td>
     </tr>
     <tr>
       <th>24</th>
       <td>Beijing dalam beberapa tahun terakhir membujuk...</td>
       <td>[beijing, bujuk, sekutu, diplomatik, taiwan, a...</td>
-      <td>-4.264965</td>
+      <td>-4.264929</td>
     </tr>
   </tbody>
 </table>
@@ -15496,7 +15564,7 @@ a.anchor-link {
  {-0.03272669350255697, &#39;kompas&#39;},
  {-0.03272669350255697, &#39;china&#39;},
  {-0.03272669350255697, &#39;selasa&#39;},
- {0.6587042394965325, &#39;tari&#39;},
+ {0.658713030751838, &#39;tari&#39;},
  {-0.03272669350255697, &#39;utus&#39;},
  {-0.03272669350255697, &#39;lithuania&#39;},
  {-0.03272669350255697, &#39;beijing&#39;},
@@ -15504,158 +15572,158 @@ a.anchor-link {
  {-0.03272669350255697, &#39;izin&#39;},
  {-0.03272669350255697, &#39;taiwan&#39;},
  {-0.03272669350255697, &#39;kantor&#39;},
- {-1.826202410291468, &#39;negara&#39;},
- {-0.5452685648294038, &#39;buah&#39;},
- {0.6587042394965325, &#39;langkah&#39;},
+ {-1.8261936190361623, &#39;negara&#39;},
+ {-0.5452597735740978, &#39;buah&#39;},
+ {0.658713030751838, &#39;langkah&#39;},
  {-0.03272669350255697, &#39;anggap&#39;},
- {-0.7275901216233582, &#39;provokatif&#39;},
- {-0.7275901216233582, &#39;perintah&#39;},
+ {-0.7275813303680526, &#39;provokatif&#39;},
+ {-0.7275813303680526, &#39;perintah&#39;},
  {-0.03272669350255697, &#39;china&#39;},
  {-0.03272669350255697, &#39;taiwan&#39;},
  {-0.03272669350255697, &#39;juli&#39;},
  {-0.03272669350255697, &#39;kantor&#39;},
- {-0.7275901216233582, &#39;wakil&#39;},
+ {-0.7275813303680526, &#39;wakil&#39;},
  {-0.03272669350255697, &#39;vilnius&#39;},
- {-0.7275901216233583, &#39;kota&#39;},
+ {-0.7275813303680525, &#39;kota&#39;},
  {-0.03272669350255697, &#39;lithuania&#39;},
- {-0.5452685648294038, &#39;buah&#39;},
- {0.6587042394965325, &#39;langkah&#39;},
+ {-0.5452597735740978, &#39;buah&#39;},
+ {0.658713030751838, &#39;langkah&#39;},
  {-0.03272669350255697, &#39;anggap&#39;},
  {-0.03272669350255697, &#39;china&#39;},
- {-1.4207373021833034, &#39;hina&#39;},
+ {-1.420728510927998, &#39;hina&#39;},
  {-0.03272669350255697, &#39;diplomatik&#39;},
  {-0.03272669350255697, &#39;china&#39;},
  {-0.03272669350255697, &#39;anggap&#39;},
  {-0.03272669350255697, &#39;taiwan&#39;},
- {-1.826202410291468, &#39;negara&#39;},
+ {-1.8261936190361623, &#39;negara&#39;},
  {-0.03272669350255697, &#39;daulat&#39;},
- {-0.7275901216233582, &#39;wilayah&#39;},
+ {-0.7275813303680526, &#39;wilayah&#39;},
  {-0.03272669350255697, &#39;menteri&#39;},
  {-0.03272669350255697, &#39;negeri&#39;},
  {-0.03272669350255697, &#39;china&#39;},
- {-0.3221250135151938, &#39;marah&#39;},
+ {-0.3221162222598881, &#39;marah&#39;},
  {-0.03272669350255697, &#39;selasa&#39;},
- {-0.7275901216233582, &#39;perintah&#39;},
+ {-0.7275813303680526, &#39;perintah&#39;},
  {-0.03272669350255697, &#39;lithuania&#39;},
- {1.0641693476046967, &#39;tarik&#39;},
+ {1.0641781388600025, &#39;tarik&#39;},
  {-0.03272669350255697, &#39;duta&#39;},
  {-0.03272669350255697, &#39;china&#39;},
- {1.0641693476046967, &#39;tarik&#39;},
+ {1.0641781388600025, &#39;tarik&#39;},
  {-0.03272669350255697, &#39;utus&#39;},
  {-0.03272669350255697, &#39;china&#39;},
  {-0.03272669350255697, &#39;lithuania&#39;},
  {-0.03272669350255697, &#39;lansir&#39;},
  {-0.03272669350255697, &#39;afp&#39;},
  {-0.03272669350255697, &#39;selasa&#39;},
- {0.18870061025079668, &#39;putus&#39;},
+ {0.18870940150610255, &#39;putus&#39;},
  {-0.03272669350255697, &#39;lithuania&#39;},
  {-0.03272669350255697, &#39;izin&#39;},
  {-0.03272669350255697, &#39;taiwan&#39;},
  {-0.03272669350255697, &#39;kantor&#39;},
- {-0.7275901216233582, &#39;wakil&#39;},
+ {-0.7275813303680526, &#39;wakil&#39;},
  {-0.03272669350255697, &#39;anggap&#39;},
- {-1.015272194075139, &#39;rusak&#39;},
+ {-1.0152634028198335, &#39;rusak&#39;},
  {-0.03272669350255697, &#39;daulat&#39;},
- {-0.7275901216233582, &#39;integritas&#39;},
+ {-0.7275813303680526, &#39;integritas&#39;},
  {-0.03272669350255697, &#39;teritorial&#39;},
  {-0.03272669350255697, &#39;china&#39;},
  {-0.03272669350255697, &#39;menteri&#39;},
  {-0.03272669350255697, &#39;negeri&#39;},
  {-0.03272669350255697, &#39;china&#39;},
- {-1.1330552297315226, &#39;nilai&#39;},
+ {-1.1330464384762169, &#39;nilai&#39;},
  {-0.03272669350255697, &#39;lithuania&#39;},
- {-0.2167644978573677, &#39;berani&#39;},
- {-0.7275901216233582, &#39;langgar&#39;},
- {-0.03444294106341289, &#39;atur&#39;},
- {-1.258218372685529, &#39;dasar&#39;},
- {-0.034442941063413, &#39;hubung&#39;},
+ {-0.21675570660206178, &#39;berani&#39;},
+ {-0.7275813303680526, &#39;langgar&#39;},
+ {-0.03443414980810731, &#39;atur&#39;},
+ {-1.2582095814302228, &#39;dasar&#39;},
+ {-0.034434149808107196, &#39;hubung&#39;},
  {-0.03272669350255697, &#39;diplomatik&#39;},
  {-0.03272669350255697, &#39;china&#39;},
  {-0.03272669350255697, &#39;china&#39;},
  {-0.03272669350255697, &#39;klaim&#39;},
  {-0.03272669350255697, &#39;taiwan&#39;},
- {0.6587042394965325, &#39;janji&#39;},
- {-2.113884482743249, &#39;rebut&#39;},
- {-0.3221250135151938, &#39;keras&#39;},
+ {0.658713030751838, &#39;janji&#39;},
+ {-2.113875691487943, &#39;rebut&#39;},
+ {-0.3221162222598881, &#39;keras&#39;},
  {-0.03272669350255697, &#39;china&#39;},
- {-0.950733672937568, &#39;coba&#39;},
+ {-0.9507248816822623, &#39;coba&#39;},
  {-0.03272669350255697, &#39;taiwan&#39;},
  {-0.03272669350255697, &#39;isolasi&#39;},
- {-0.7275901216233582, &#39;panggung&#39;},
- {-0.129753120867738, &#39;dunia&#39;},
- {-1.1330552297315226, &#39;tolak&#39;},
+ {-0.7275813303680526, &#39;panggung&#39;},
+ {-0.1297443296124321, &#39;dunia&#39;},
+ {-1.1330464384762169, &#39;tolak&#39;},
  {-0.03272669350255697, &#39;taiwan&#39;},
  {-0.03272669350255697, &#39;resmi&#39;},
  {-0.03272669350255697, &#39;pulau&#39;},
  {-0.03272669350255697, &#39;legitimasi&#39;},
- {1.0641693476046967, &#39;internasional&#39;},
+ {1.0641781388600025, &#39;internasional&#39;},
  {-0.03272669350255697, &#39;menteri&#39;},
  {-0.03272669350255697, &#39;negeri&#39;},
  {-0.03272669350255697, &#39;china&#39;},
  {-0.03272669350255697, &#39;selasa&#39;},
  {-0.03272669350255697, &#39;desak&#39;},
  {-0.03272669350255697, &#39;lithuania&#39;},
- {0.18870061025079668, &#39;putus&#39;},
- {0.553343723838706, &#39;salah&#39;},
- {-1.1330552297315226, &#39;gerak&#39;},
- {0.3710221670447515, &#39;jalan&#39;},
- {0.553343723838706, &#39;salah&#39;},
+ {0.18870940150610255, &#39;putus&#39;},
+ {0.553352515094012, &#39;salah&#39;},
+ {-1.1330464384762169, &#39;gerak&#39;},
+ {0.37103095830005717, &#39;jalan&#39;},
+ {0.553352515094012, &#39;salah&#39;},
  {-0.03272669350255697, &#39;menteri&#39;},
  {-0.03272669350255697, &#39;negeri&#39;},
  {-0.03272669350255697, &#39;lithuania&#39;},
- {-1.1330552297315226, &#39;tanggap&#39;},
- {-1.1330552297315226, &#39;kecewa&#39;},
- {0.6587042394965325, &#39;langkah&#39;},
+ {-1.1330464384762169, &#39;tanggap&#39;},
+ {-1.1330464384762169, &#39;kecewa&#39;},
+ {0.658713030751838, &#39;langkah&#39;},
  {-0.03272669350255697, &#39;china&#39;},
- {0.6587042394965323, &#39;hormat&#39;},
- {0.6587042394965325, &#39;prinsip&#39;},
+ {0.6587130307518381, &#39;hormat&#39;},
+ {0.658713030751838, &#39;prinsip&#39;},
  {-0.03272669350255697, &#39;china&#39;},
  {-0.03272669350255697, &#39;lithuania&#39;},
  {-0.03272669350255697, &#39;tekad&#39;},
- {-0.7275901216233582, &#39;kembang&#39;},
- {-0.034442941063413, &#39;hubung&#39;},
- {1.0641693476046967, &#39;untung&#39;},
+ {-0.7275813303680526, &#39;kembang&#39;},
+ {-0.034434149808107196, &#39;hubung&#39;},
+ {1.0641781388600027, &#39;untung&#39;},
  {-0.03272669350255697, &#39;taiwan&#39;},
- {-0.7275901216233582, &#39;bunyi&#39;},
- {-0.3221250135151938, &#39;nyata&#39;},
+ {-0.7275813303680526, &#39;bunyi&#39;},
+ {-0.3221162222598881, &#39;nyata&#39;},
  {-0.03272669350255697, &#39;menteri&#39;},
  {-0.03272669350255697, &#39;negeri&#39;},
  {-0.03272669350255697, &#39;lithuania&#39;},
  {-0.03272669350255697, &#39;uni&#39;},
  {-0.03272669350255697, &#39;eropa&#39;},
  {-0.03272669350255697, &#39;mengunngkapkan&#39;},
- {-1.1330552297315226, &#39;kecewa&#39;},
- {0.6587042394965325, &#39;langkah&#39;},
+ {-1.1330464384762169, &#39;kecewa&#39;},
+ {0.658713030751838, &#39;langkah&#39;},
  {-0.03272669350255697, &#39;beijing&#39;},
- {-0.7275901216233582, &#39;kembang&#39;},
+ {-0.7275813303680526, &#39;kembang&#39;},
  {-0.03272669350255697, &#39;cermat&#39;},
  {-0.03272669350255697, &#39;anggap&#39;},
- {0.9463863119483132, &#39;buka&#39;},
+ {0.946395103203619, &#39;buka&#39;},
  {-0.03272669350255697, &#39;kantor&#39;},
- {-0.7275901216233582, &#39;wakil&#39;},
+ {-0.7275813303680526, &#39;wakil&#39;},
  {-0.03272669350255697, &#39;taiwan&#39;},
- {-1.1330552297315226, &#39;lawan&#39;},
+ {-1.1330464384762169, &#39;lawan&#39;},
  {-0.03272669350255697, &#39;duta&#39;},
  {-0.03272669350255697, &#39;konsulat&#39;},
- {-0.7275901216233582, &#39;langgar&#39;},
- {-0.4399080491715774, &#39;bijak&#39;},
+ {-0.7275813303680526, &#39;langgar&#39;},
+ {-0.43989925791627166, &#39;bijak&#39;},
  {-0.03272669350255697, &#39;china&#39;},
  {-0.03272669350255697, &#39;ue&#39;},
  {-0.03272669350255697, &#39;juru&#39;},
- {-1.287205909558781, &#39;bicara&#39;},
+ {-1.2871971183034752, &#39;bicara&#39;},
  {-0.03272669350255697, &#39;blok&#39;},
- {-0.275604997880301, &#39;kali&#39;},
+ {-0.2755962066249952, &#39;kali&#39;},
  {-0.03272669350255697, &#39;china&#39;},
- {1.0641693476046967, &#39;tarik&#39;},
- {-1.0426711682632537, &#39;orang&#39;},
+ {1.0641781388600025, &#39;tarik&#39;},
+ {-1.0426623770079477, &#39;orang&#39;},
  {-0.03272669350255697, &#39;duta&#39;},
- {-1.826202410291468, &#39;negara&#39;},
- {-0.7275901216233582, &#39;anggota&#39;},
+ {-1.8261936190361623, &#39;negara&#39;},
+ {-0.7275813303680526, &#39;anggota&#39;},
  {-0.03272669350255697, &#39;uni&#39;},
  {-0.03272669350255697, &#39;eropa&#39;},
  {-0.03272669350255697, &#39;perihal&#39;},
- {0.9463863119483132, &#39;buka&#39;},
- {-0.7275901216233582, &#39;tahan&#39;},
+ {0.946395103203619, &#39;buka&#39;},
+ {-0.7275813303680526, &#39;tahan&#39;},
  {-0.03272669350255697, &#39;kantor&#39;},
  {-0.03272669350255697, &#39;taiwan&#39;},
  {-0.03272669350255697, &#39;ue&#39;},
@@ -15663,101 +15731,101 @@ a.anchor-link {
  {-0.03272669350255697, &#39;menteri&#39;},
  {-0.03272669350255697, &#39;negeri&#39;},
  {-0.03272669350255697, &#39;lithuania&#39;},
- {0.6587042394965325, &#39;mitra&#39;},
- {-1.015272194075139, &#39;pikir&#39;},
+ {0.658713030751838, &#39;mitra&#39;},
+ {-1.0152634028198335, &#39;pikir&#39;},
  {-0.03272669350255697, &#39;taiwan&#39;},
- {-1.258218372685529, &#39;dasar&#39;},
- {-1.1330552297315226, &#39;nilai&#39;},
+ {-1.2582095814302228, &#39;dasar&#39;},
+ {-1.1330464384762169, &#39;nilai&#39;},
  {-0.03272669350255697, &#39;universal&#39;},
  {-0.03272669350255697, &#39;demokrasi&#39;},
- {-0.4399080491715774, &#39;bebas&#39;},
- {-0.2575864923776229, &#39;hak&#39;},
+ {-0.43989925791627166, &#39;bebas&#39;},
+ {-0.2575777011223169, &#39;hak&#39;},
  {-0.03272669350255697, &#39;asasi&#39;},
- {-0.6704317077834098, &#39;manusia&#39;},
- {1.0641693476046967, &#39;belah&#39;},
- {-0.7275901216233582, &#39;tingkat&#39;},
- {0.6587042394965325, &#39;tukar&#39;},
- {0.6587042394965325, &#39;bidang&#39;},
+ {-0.6704229165281038, &#39;manusia&#39;},
+ {1.0641781388600025, &#39;belah&#39;},
+ {-0.7275813303680526, &#39;tingkat&#39;},
+ {0.658713030751838, &#39;tukar&#39;},
+ {0.658713030751838, &#39;bidang&#39;},
  {-0.03272669350255697, &#39;juru&#39;},
- {-1.287205909558781, &#39;bicara&#39;},
+ {-1.2871971183034752, &#39;bicara&#39;},
  {-0.03272669350255697, &#39;ue&#39;},
  {-0.03272669350255697, &#39;joanne&#39;},
  {-0.03272669350255697, &#39;ou&#39;},
- {0.9463863119483132, &#39;buka&#39;},
+ {0.946395103203619, &#39;buka&#39;},
  {-0.03272669350255697, &#39;kantor&#39;},
  {-0.03272669350255697, &#39;vilnius&#39;},
- {0.6587042394965325, &#39;tanda&#39;},
- {-1.826202410291468, &#39;negara&#39;},
+ {0.658713030751838, &#39;tanda&#39;},
+ {-1.8261936190361623, &#39;negara&#39;},
  {-0.03272669350255697, &#39;baltik&#39;},
  {-0.03272669350255697, &#39;eropa&#39;},
- {-0.3709151776846259, &#39;cari&#39;},
- {-0.034442941063413, &#39;hubung&#39;},
+ {-0.37090638642931995, &#39;cari&#39;},
+ {-0.034434149808107196, &#39;hubung&#39;},
  {-0.03272669350255697, &#39;taiwan&#39;},
- {-0.3221250135151938, &#39;marah&#39;},
+ {-0.3221162222598881, &#39;marah&#39;},
  {-0.03272669350255697, &#39;china&#39;},
- {1.3518514200564777, &#39;mei&#39;},
+ {1.3518602113117832, &#39;mei&#39;},
  {-0.03272669350255697, &#39;lithuania&#39;},
  {-0.03272669350255697, &#39;forum&#39;},
  {-0.03272669350255697, &#39;kerjasama&#39;},
  {-0.03272669350255697, &#39;china&#39;},
- {-1.826202410291468, &#39;negara&#39;},
+ {-1.8261936190361623, &#39;negara&#39;},
  {-0.03272669350255697, &#39;eropa&#39;},
- {-1.1330552297315226, &#39;timur&#39;},
+ {-1.1330464384762169, &#39;timur&#39;},
  {-0.03272669350255697, &#39;forum&#39;},
- {1.0641693476046967, &#39;pecah&#39;},
- {1.0641693476046967, &#39;belah&#39;},
+ {1.0641781388600025, &#39;pecah&#39;},
+ {1.0641781388600025, &#39;belah&#39;},
  {-0.03272669350255697, &#39;lithuania&#39;},
- {0.6587042394965325, &#39;janji&#39;},
- {0.6587042394965325, &#39;sumbang&#39;},
+ {0.658713030751838, &#39;janji&#39;},
+ {0.658713030751838, &#39;sumbang&#39;},
  {-0.03272669350255697, &#39;dosis&#39;},
  {-0.03272669350255697, &#39;vaksin&#39;},
  {-0.03272669350255697, &#39;virus&#39;},
  {-0.03272669350255697, &#39;corona&#39;},
  {-0.03272669350255697, &#39;taiwan&#39;},
  {-0.03272669350255697, &#39;ceko&#39;},
- {-1.4207373021833034, &#39;batal&#39;},
- {0.6587042394965325, &#39;janji&#39;},
- {-0.7275901216233583, &#39;kota&#39;},
+ {-1.420728510927998, &#39;batal&#39;},
+ {0.658713030751838, &#39;janji&#39;},
+ {-0.7275813303680525, &#39;kota&#39;},
  {-0.03272669350255697, &#39;kembar&#39;},
  {-0.03272669350255697, &#39;beijing&#39;},
  {-0.03272669350255697, &#39;menandatanganinya&#39;},
  {-0.03272669350255697, &#39;taipei&#39;},
- {0.25323913138836796, &#39;pimpin&#39;},
+ {0.11971653001915117, &#39;pimpin&#39;},
  {-0.03272669350255697, &#39;senat&#39;},
  {-0.03272669350255697, &#39;ceko&#39;},
  {-0.03272669350255697, &#39;milos&#39;},
  {-0.03272669350255697, &#39;vystrcil&#39;},
- {-1.369444007795753, &#39;laku&#39;},
- {-0.03444294106341289, &#39;kunjung&#39;},
- {-0.7275901216233582, &#39;tingkat&#39;},
+ {-1.369435216540447, &#39;laku&#39;},
+ {-0.03443414980810731, &#39;kunjung&#39;},
+ {-0.7275813303680526, &#39;tingkat&#39;},
  {-0.03272669350255697, &#39;taiwan&#39;},
- {-0.3221250135151938, &#39;marah&#39;},
+ {-0.3221162222598881, &#39;marah&#39;},
  {-0.03272669350255697, &#39;china&#39;},
  {-0.03272669350255697, &#39;china&#39;},
- {0.18870061025079668, &#39;putus&#39;},
+ {0.18870940150610255, &#39;putus&#39;},
  {-0.03272669350255697, &#39;kontak&#39;},
  {-0.03272669350255697, &#39;resmi&#39;},
  {-0.03272669350255697, &#39;taiwan&#39;},
- {-0.7275901216233582, &#39;tingkat&#39;},
- {-0.7275901216233582, &#39;tekan&#39;},
+ {-0.7275813303680526, &#39;tingkat&#39;},
+ {-0.7275813303680526, &#39;tekan&#39;},
  {-0.03272669350255697, &#39;diplomatik&#39;},
- {0.09908845156110971, &#39;pilih&#39;},
- {0.881847790810742, &#39;presiden&#39;},
+ {0.09909724281641538, &#39;pilih&#39;},
+ {0.8818565820660479, &#39;presiden&#39;},
  {-0.03272669350255697, &#39;tsai&#39;},
  {-0.03272669350255697, &#39;ingwen&#39;},
  {-0.03272669350255697, &#39;tsai&#39;},
- {1.7573165281646421, &#39;menang&#39;},
- {0.09908845156110971, &#39;pilih&#39;},
+ {1.7573253194199479, &#39;menang&#39;},
+ {0.09909724281641538, &#39;pilih&#39;},
  {-0.03272669350255697, &#39;telak&#39;},
- {-1.1330552297315226, &#39;tolak&#39;},
- {-0.4399080491715774, &#39;sikap&#39;},
+ {-1.1330464384762169, &#39;tolak&#39;},
+ {-0.43989925791627166, &#39;sikap&#39;},
  {-0.03272669350255697, &#39;china&#39;},
  {-0.03272669350255697, &#39;taian&#39;},
  {-0.03272669350255697, &#39;china&#39;},
- {0.18870061025079668, &#39;usaha&#39;},
- {-0.7275901216233582, &#39;tahan&#39;},
+ {0.18870940150610255, &#39;usaha&#39;},
+ {-0.7275813303680526, &#39;tahan&#39;},
  {-0.03272669350255697, &#39;taiwan&#39;},
- {-1.826202410291468, &#39;negara&#39;},
+ {-1.8261936190361623, &#39;negara&#39;},
  {-0.03272669350255697, &#39;daulat&#39;},
  {-0.03272669350255697, &#39;de&#39;},
  {-0.03272669350255697, &#39;facto&#39;},
@@ -15767,11 +15835,11 @@ a.anchor-link {
  {-0.03272669350255697, &#39;diplomatik&#39;},
  {-0.03272669350255697, &#39;taiwan&#39;},
  {-0.03272669350255697, &#39;alih&#39;},
- {-1.369444007795753, &#39;laku&#39;},
- {-0.7275901216233582, &#39;tekan&#39;},
- {-1.1330552297315226, &#39;ancam&#39;},
+ {-1.369435216540447, &#39;laku&#39;},
+ {-0.7275813303680526, &#39;tekan&#39;},
+ {-1.1330464384762169, &#39;ancam&#39;},
  {-0.03272669350255697, &#39;insentif&#39;},
- {-1.1330552297315226, &#39;ekonomi&#39;}]</pre>
+ {-1.1330464384762169, &#39;ekonomi&#39;}]</pre>
 </div>
 
 </div>

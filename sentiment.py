@@ -44,7 +44,7 @@ def train_nbc(freqs, train_y):
         if pair[1] > 0:
             N_pos += freqs[(pair)]
         else:
-            N_neg += freqs[(pair)]    
+            N_neg += freqs[(pair)]   
 
         # jumlah document
         D = train_y.shape[0]
