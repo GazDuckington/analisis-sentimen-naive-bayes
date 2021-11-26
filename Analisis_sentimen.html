@@ -14779,20 +14779,16 @@ $V$ = jumlah total kata unik (panjang dokumen frekuensi) <br></p>
 <li>TN = True Negative</li>
 <li>FP = False Positive</li>
 <li>FN = False Negative</li>
-<li>Populasi = TP+TN+FP+FN
-### akurasi
-jumlah prediksi yang benar <br>
-$\frac{TP+TN}{Populasi}$
-### miss
-jumlah prediksi yang salah <br>
-$\frac{FP+FN}{Populasi}$
-### presisi
-persentase positif yang diprediksi secara akurat <br>
-$\frac{TP}{TP+FP}$
-### sensitifitas
-nilai positif sesungguhnya <br>
-$\frac{TP}{TP+FN}$</li>
+<li>Populasi = TP+TN+FP+FN<hr></li>
 </ul>
+<h3 id="akurasi">akurasi<a class="anchor-link" href="#akurasi">&#182;</a></h3><p>jumlah prediksi yang benar. tidak dianjurkan sebagai metrik kunci. <br>
+$\frac{TP+TN}{Populasi}$</p>
+<h3 id="miss">miss<a class="anchor-link" href="#miss">&#182;</a></h3><p>jumlah prediksi yang salah <br>
+$\frac{FP+FN}{Populasi}$</p>
+<h3 id="presisi">presisi<a class="anchor-link" href="#presisi">&#182;</a></h3><p>persentase positif yang diprediksi secara akurat. jika FP = 0, maka nilai presisi 100%. <br>
+$\frac{TP}{TP+FP}$</p>
+<h3 id="sensitifitas">sensitifitas<a class="anchor-link" href="#sensitifitas">&#182;</a></h3><p>nilai positif sesungguhnya <br>
+$\frac{TP}{TP+FN}$</p>
 
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
@@ -14941,7 +14937,11 @@ $\frac{TP}{TP+FN}$</li>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;akurasi:</span><span class="si">{</span><span class="p">(</span><span class="mi">647</span><span class="o">+</span><span class="mi">555</span><span class="p">)</span><span class="o">/</span><span class="mi">1300</span><span class="si">}</span><span class="s2">, miss:</span><span class="si">{</span><span class="p">(</span><span class="mi">14</span><span class="o">+</span><span class="mi">84</span><span class="p">)</span><span class="o">/</span><span class="mi">1300</span><span class="si">}</span><span class="s2">, presisi: </span><span class="si">{</span><span class="mi">555</span><span class="o">/</span><span class="p">(</span><span class="mi">555</span><span class="o">+</span><span class="mi">14</span><span class="p">)</span><span class="si">}</span><span class="s2">, sensi: </span><span class="si">{</span><span class="mi">555</span><span class="o">/</span><span class="p">(</span><span class="mi">555</span><span class="o">+</span><span class="mi">84</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="mi">647</span><span class="o">+</span><span class="mi">555</span><span class="p">)</span><span class="o">/</span><span class="mi">1300</span>
+<span class="n">m</span> <span class="o">=</span> <span class="p">(</span><span class="mi">14</span><span class="o">+</span><span class="mi">84</span><span class="p">)</span><span class="o">/</span><span class="mi">1300</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mi">555</span><span class="o">/</span><span class="p">(</span><span class="mi">555</span><span class="o">+</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">s</span> <span class="o">=</span> <span class="mi">555</span><span class="o">/</span><span class="p">(</span><span class="mi">555</span><span class="o">+</span><span class="mi">84</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;akurasi:</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">, miss:</span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s2">, presisi: </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">, sensi: </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2"> F1:</span><span class="si">{</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">*</span><span class="n">s</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">p</span><span class="o">+</span><span class="n">s</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14961,7 +14961,8 @@ $\frac{TP}{TP+FN}$</li>
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>akurasi:0.9246153846153846, miss:0.07538461538461538, presisi: 0.9753954305799648, sensi: 0.8685446009389671
+<pre>akurasi:0.9246153846153846, miss:0.07538461538461538, presisi: 0.9753954305799648, sensi: 0.8685446009389671.
+ F1:0.9188741721854304
 </pre>
 </div>
 </div>
@@ -15053,7 +15054,11 @@ $\frac{TP}{TP+FN}$</li>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;akurasi:</span><span class="si">{</span><span class="p">(</span><span class="mi">647</span><span class="o">+</span><span class="mi">556</span><span class="p">)</span><span class="o">/</span><span class="mi">1300</span><span class="si">}</span><span class="s2">, miss:</span><span class="si">{</span><span class="p">(</span><span class="mi">14</span><span class="o">+</span><span class="mi">83</span><span class="p">)</span><span class="o">/</span><span class="mi">1300</span><span class="si">}</span><span class="s2">, presisi: </span><span class="si">{</span><span class="mi">556</span><span class="o">/</span><span class="p">(</span><span class="mi">556</span><span class="o">+</span><span class="mi">14</span><span class="p">)</span><span class="si">}</span><span class="s2">, sensi: </span><span class="si">{</span><span class="mi">556</span><span class="o">/</span><span class="p">(</span><span class="mi">556</span><span class="o">+</span><span class="mi">83</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">a2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">647</span><span class="o">+</span><span class="mi">556</span><span class="p">)</span><span class="o">/</span><span class="mi">1300</span>
+<span class="n">m2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">14</span><span class="o">+</span><span class="mi">83</span><span class="p">)</span><span class="o">/</span><span class="mi">1300</span>
+<span class="n">p2</span> <span class="o">=</span> <span class="mi">556</span><span class="o">/</span><span class="p">(</span><span class="mi">556</span><span class="o">+</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">s2</span> <span class="o">=</span> <span class="mi">556</span><span class="o">/</span><span class="p">(</span><span class="mi">556</span><span class="o">+</span><span class="mi">83</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;akurasi:</span><span class="si">{</span><span class="n">a2</span><span class="si">}</span><span class="s2">, miss:</span><span class="si">{</span><span class="n">m2</span><span class="si">}</span><span class="s2">, presisi: </span><span class="si">{</span><span class="n">p2</span><span class="si">}</span><span class="s2">, sensi: </span><span class="si">{</span><span class="n">s2</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2"> F1:</span><span class="si">{</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">p2</span><span class="o">*</span><span class="n">s2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">p2</span><span class="o">+</span><span class="n">s2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -15073,7 +15078,8 @@ $\frac{TP}{TP+FN}$</li>
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>akurasi:0.9253846153846154, miss:0.07461538461538461, presisi: 0.9754385964912281, sensi: 0.8701095461658842
+<pre>akurasi:0.9253846153846154, miss:0.07461538461538461, presisi: 0.9754385964912281, sensi: 0.8701095461658842.
+ F1:0.9197684036393714
 </pre>
 </div>
 </div>

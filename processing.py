@@ -1,9 +1,12 @@
-import nltk, re
+"""Modul pre-processing kalimat"""
+import re
+import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+nltk.data.path.append("NLTK_DATA")
 
-#TODO: save stopwords to a document to minimize dependency
+#*TODO: save stopwords to a document to minimize dependency
 stopwords_en = stopwords.words("english")
 stopwords_id = stopwords.words("indonesian")
 swtw = [

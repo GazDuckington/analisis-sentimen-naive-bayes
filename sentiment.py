@@ -1,3 +1,4 @@
+"""Modul analisis sentimen"""
 import numpy as np
 from processing import normalisasi
 
@@ -117,3 +118,4 @@ def test_nbc(test_x, test_y, logprior, loglikelihood):
     accuracy = 1-error
 
     return accuracy
+    
