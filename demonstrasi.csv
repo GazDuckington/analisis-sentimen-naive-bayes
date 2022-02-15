@@ -1,0 +1,24 @@
+,kalimat,kalimat_normal,label_prediksi,prediksi
+0,"Sebelum install Ubuntu 21.04, terlebih dahulu saya mencoba Ubuntu 20.10 (Groovy Gorilla).","['install', 'ubuntu', 'coba', 'ubuntu', 'groovy', 'gorilla']",-0.9507248816822623,0
+1,Tujuan saya mencoba OS ini adalah untuk mencicipi fitur-fitur baru Ubuntu.,"['tuju', 'coba', 'os', 'cicip', 'fiturfitur', 'ubuntu']",-0.6159601013665996,0
+2,Saya pribadi sangat menyukai performa versi 20.10 karena terasa sangat stabil.,"['pribadi', 'suka', 'performa', 'versi', 'asa', 'stabil']",-0.4196119113075538,0
+3,"Dan, hampir tidak ada masalah berarti yang saya jumpai selama menggunakan sistem operasi tersebut.","['arti', 'jumpa', 'sistem', 'operasi']",-4.239261596604686,0
+4,Banyak fitur baru yang sangat berguna.,['fitur'],-0.03272669350255697,0
+5,"Tapi buat saya, fitur-fitur tersebut tidak sepenuhnya saya butuhkan.","['fiturfitur', 'sepenuh', 'butuh']",-0.9507248816822622,0
+6,"Mengingat, saya menggunakan distro Linux ini hanya untuk melakukan tugas ringan seperti, browsing, mengetik artikel, sesekali membuat grafis vektor, dan editing video di Openshot.","['distro', 'linux', 'laku', 'tugas', 'ringan', 'browsing', 'etik', 'artikel', 'sekal', 'grafis', 'vektor', 'editing', 'video', 'openshot']",-0.39031341983427115,0
+7,Setelah merasakan enaknya pakai versi 21.10 saya sempat enggan pindah ke 21.04 LTS.,"['enak', 'pakai', 'versi', 'enggan', 'pindah', 'lts']",1.7539104068088476,1
+8,"Tapi, saya tetap harus beralih ke versi 21.04 karena, dukungan untuk 21.10 akan berakhir pada bulan Juli 2021.","['alih', 'versi', 'dukung', 'juli']",0.37103095830005717,1
+9,"Dan, saya sudah lama memendam keinginan untuk mencoba meng-install Ubuntu 21.04 dan Zorin 16 atau kembali ke PopOS 20.04.","['pendam', 'coba', 'menginstall', 'ubuntu', 'zorin', 'popos']",-0.9507248816822623,0
+10,"Selama beberapa bulan menggunakan OS ini, saya merasa cukup puas.","['os', 'puas']",-0.03443414980810731,0
+11,Hampir tak ada kendala berarti yang saya jumpai.,"['kendala', 'arti', 'jumpa']",-2.6281162278650347,0
+12,Semua software yang biasa saya butuhkan bisa diinstal dan berjalan lancar tanpa kendala.,"['software', 'butuh', 'diinstal', 'jalan', 'lancar', 'kendala']",1.1078459341127833,1
+13,"Mulai dari Google Chrome, WPS Office, Wine dan PlayOnLinux, Blender, Audacity, Inkscape, Openshot Video Editor, dan berbagai macam software Ubuntu lainnya yang juga rata-rata berjalan dengan sangat mulus.","['google', 'chrome', 'wps', 'office', 'wine', 'playonlinux', 'blender', 'audacity', 'inkscape', 'openshot', 'video', 'editor', 'software', 'ubuntu', 'jalan', 'mulus']",0.6552981181407375,1
+14,Satu-satunya software yang terkendala dan tidak bisa saya jalankan pada Ubuntu 21.04 LTS adalah Plank.,"['software', 'kendala', 'jalan', 'ubuntu', 'lts', 'plank']",-0.3238236785654385,0
+15,"Yaitu, aplikasi docking yang selalu saya gunakan untuk memudahkan interaksi dengan komputer.","['aplikasi', 'docking', 'mudah', 'interaksi', 'komputer']",0.8801491257604975,1
+16,Mengapa saya tidak berhasil menjalankan aplikasi Plank pada Ubuntu 20.04 LTS?,"['hasil', 'jalan', 'aplikasi', 'plank', 'ubuntu', 'lts']",-0.10238758355677902,0
+17,Sederhana!,['sederhana'],1.2183288186872607,1
+18,Karena waktu itu saya tidak menyadari bahwa sistem operasi ini membawa 2 pilihan protokol sebagai primary display server yaitu: Xorg (X11) dan Wayland.,"['sadar', 'sistem', 'operasi', 'bawa', 'pilih', 'protokol', 'primary', 'display', 'server', 'xorg', 'x', 'wayland']",-4.695224325187832,0
+19,"Secara default, Ubuntu 21.04 menggunakan Wayland.","['default', 'ubuntu', 'wayland']",-0.03272669350255697,0
+20,Dan disinilah masalahnya.,['sin'],-0.03272669350255697,0
+21,Plank belum support Wayland sehingga tidak bisa dijalankan meski berhasil diinstall.,"['plank', 'support', 'wayland', 'jalan', 'hasil', 'diinstall']",1.689371885671276,1
+22,"Karena merasa lebih membutuhkan Plank daripada Wayland, saya pun memutuskan untuk men-switch dari Wayland ke X11.","['butuh', 'plank', 'wayland', 'putus', 'menswitch', 'wayland', 'x']",-0.7292887866736026,0
