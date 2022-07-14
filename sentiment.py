@@ -22,6 +22,23 @@ def kamus_freq(teks, label):
                 result[pair] = 1
     return result
 
+def hitungPrior(train_y: np.array.astype) -> float:
+    """Menghitung nilai prior"""
+
+    Doc = train_y.shape[0]
+    Dpos: int = sum(train_y)
+    Dneg: int = Doc - Dpos
+    return np.log(Dpos-Dneg)
+
+def hitungJumlahKata(freqs: dict) -> dict:
+    Npos: int = 0; Nneg: int = 0
+    for pair in freqs:
+        if pair[1] > 0:
+            Npos += freqs[(pair)] 
+        else:
+            Nneg += freqs[(pair)]
+    return {"pos": Npos, "neg": Nneg}
+
 # *NBC training
 def train_nbc(freqs, train_y):
     """melatih naive-bayes classifier
