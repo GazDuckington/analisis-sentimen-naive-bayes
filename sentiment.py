@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from processing import normalisasi
 
-# *kamus frekuensi kata
+# ** kamus frekuensi kata
 def kamus_freq(teks: List[str], label: List[int]) -> dict:
     """kamus frekwensi kata dalam dokumen
     input:
