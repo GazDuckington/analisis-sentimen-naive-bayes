@@ -1,8 +1,0 @@
-{
-    "python.pythonPath": "/home/gaz/.local/share/virtualenvs/analisis-sentimen-naive-bayes-RPxRJ-iK/bin/python",
-    "jupyter.jupyterServerType": "local",
-    "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true,
-    "jupyter.jupyterServerURI": "local",
-    "python.formatting.provider": "black"
-}
