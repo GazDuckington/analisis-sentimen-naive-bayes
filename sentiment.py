@@ -1,9 +1,10 @@
-"""Modul analisis sentimen"""
+from typing import List
 import numpy as np
+import pandas as pd
 from processing import normalisasi
 
-# *kamus frekuensi kata
-def kamus_freq(teks, label):
+# ** kamus frekuensi kata
+def kamus_freq(teks: List[str], label: List[int]) -> dict:
     """kamus frekwensi kata dalam dokumen
     input:
         teks: list string
@@ -22,30 +23,50 @@ def kamus_freq(teks, label):
                 result[pair] = 1
     return result
 
-# *NBC training
-def train_nbc(freqs, train_y):
+# ** NBC training, pada peng-apliksaian gunakan database query
+# ** hitung likelihood
+def hitungLikelihood(freqs: dict) -> dict:
     """melatih naive-bayes classifier
     Args:
         freqs ([dict]): [kamus frekuensi kata data training]
         train_y ([array]): [label sentimen data training]
 
     Returns:
-        logprior[integer]: [nilai probabilitas prior]
         loglikelihood[dict]: [kamus probabilitas likelihood setiap kata pada data training]
     """
     loglikelihood = {}
-    logprior = 0
     N_pos = N_neg = 0
 
-    unique_words = {pair[0] for pair in freqs.keys()}
+    unique_words = {pair[0] for pair in freqs}
     v = len(unique_words)
 
-    # menghitung jumlah kata negatif (N_neg) dan positif (N_pos)
-    for pair in freqs.keys():
+    for word in unique_words:
+        # frekuensi positif dan negatif suatu kata
+        freq_pos = freqs.get((word, 1), 0)
+        freq_neg = freqs.get((word, 0), 0)
+        # probabilitas polaritas kata
+        pw_pos = (freq_pos + 1) / (N_pos + v)
+        pw_neg = (freq_neg + 1) / (N_neg + v)
+        # kemungkinan suatu kata dalam suatu dokumen yang bernilai positif/negatif
+        loglikelihood[word] = np.log(pw_pos / pw_neg)
+    return loglikelihood
+
+# ** hitung prior
+def hitungPrior(freqs: dict, train_y) -> float:
+    """melatih naive-bayes classifier
+    Args:
+        freqs ([dict]): [kamus frekuensi kata data training]
+        train_y ([array]): [label sentimen data training]
+    Returns:
+        logprior[float]: [nilai prior (probabilitas default)]
+    """
+    N_neg = N_pos = 0
+    logprior = 0
+    for pair in freqs:
         if pair[1] > 0:
             N_pos += freqs[(pair)]
         else:
-            N_neg += freqs[(pair)]   
+            N_neg += freqs[(pair)]    
 
         # jumlah document
         D = train_y.shape[0]
@@ -56,23 +77,11 @@ def train_nbc(freqs, train_y):
 
         # kemungkinan nilai sentimen suatu kata
         logprior = np.log(D_pos) - np.log(D_neg)
+    return logprior
+# ** end of NBC training
 
-        for word in unique_words:
-
-            # frekuensi positif dan negatif suatu kata
-            freq_pos = freqs.get((word, 1), 0)
-            freq_neg = freqs.get((word, 0), 0)
-            # probabilitas polaritas kata
-            pw_pos = (freq_pos + 1) / (N_pos + v)
-            pw_neg = (freq_neg + 1) / (N_neg + v)
-
-            # kemungkinan suatu kata dalam suatu dokumen yang bernilai positif/negatif
-            loglikelihood[word] = np.log(pw_pos / pw_neg)
-
-        return logprior, loglikelihood
-
-# *prediktor
-def predict_nbc(text, logprior, loglikelihood):
+# ** prediktor
+def predict_nbc(text: str, logprior: float, loglikelihood: dict) -> float:
     """prediktor naive-bayes
     Args:
         text ([string]): [kalimat yang ingin diketahui sentimennya]
@@ -83,16 +92,15 @@ def predict_nbc(text, logprior, loglikelihood):
         p[integer]: [nilai probabilitas sentimen]
     """
     word_l = normalisasi(text)
-    p = 0
-    p += logprior
+    p = logprior
 
     for word in word_l:
         if word in loglikelihood:
             p += loglikelihood[word]
     return p
 
-# *test nbc
-def test_nbc(test_x, test_y, logprior, loglikelihood):
+# ** test nbc
+def test_nbc(test_x: List[str], test_y: List[int], logprior: float, loglikelihood: dict) -> str:
     """menguji naivve-bayes classifier
     Input:
         test_x: list kata
@@ -102,20 +110,20 @@ def test_nbc(test_x, test_y, logprior, loglikelihood):
     Output:
         accuracy: (klasifikasi benar)/(populasi)
     """
-    accuracy = 0  # return this properly
+    accuracy = 0
     y_hats = []
     for t in test_x:
-        # if the prediction is > 0
+        # jika hasil prediksi > 0, skor adalah 1(positif)
         y_hat_i = 1 if predict_nbc(t, logprior, loglikelihood) > 0 else 0
-        # append the predicted class to the list y_hats
+        # membuat list hasil prediksi
         y_hats.append(y_hat_i)
 
-    # error is the average of the absolute values of the differences between y_hats and test_y
-    arr=np.array([y_hats,test_y])
+    # hitung jumlah skor prediksi yang sama dengan nilai pada dataset test
+    # nilai error adalah jumlah prediksi yang keliru
+    arr = np.array([y_hats,test_y])
     error =np.sum(np.diff(arr, axis=0))/len(test_y)
 
-    # Accuracy is 1 minus the error
+    # akurasi 1 - error (percentile)
     accuracy = 1-error
 
-    return accuracy
-    
+    return format(accuracy, ".2%")
