@@ -1,4 +1,7 @@
 # PENTING
+# Repository ini sudah tidak saya gunakan.
+# Silahkan gunakan [Sensi](https://github.com/GazDuckington/nbc-sentimen)
+---
 *Notebook* ini dibuat menggunakan *virtual environment* dengan versi **Python 3.8**. 
 ## VSCode *Interpreter*
 Jika, mengalami kesulitan dalam mengatur interpretasi dalam vscode:
